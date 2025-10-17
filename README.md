@@ -6,3 +6,6 @@ Milestone 1: DevOps & System Integration.
 - Build container
 - Deploy to k8s
 - Manage via IaC
+
+## Tools
+- Git, GitHub, Docker, Kubernetes, Terraform
