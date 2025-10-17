@@ -9,3 +9,6 @@ Milestone 1: DevOps & System Integration.
 
 ## Tools
 - Git, GitHub, Docker, Kubernetes, Terraform
+
+## Tools
+- Git, GitHub, Docker, Kubernetes, Terraform
