@@ -2,6 +2,7 @@
 
 Milestone 1: DevOps & System Integration.
 
+
 ## Example Workflow
 - Build container
 - Deploy to k8s
@@ -9,6 +10,7 @@ Milestone 1: DevOps & System Integration.
 
 ## Tools
 - Git, GitHub, Docker, Kubernetes, Terraform
+
 
 ## Tools
 - Git, GitHub, Docker, Kubernetes, Terraform
