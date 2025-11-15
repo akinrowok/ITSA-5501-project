@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  # 1) Scalable static frontend served by Nginx
+  frontend:
+    image: nginx:alpine
+    container_name: frontend
+    ports:
+      - "9090:80"        # host:container
+    volumes:
+      - ../frontend:/usr/share/nginx/html:ro
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # 2) MongoDB for user data
+  user-db:
+    image: mongo:6
+    container_name: user-db
+    volumes:
+      - user_data:/data/db
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # 3) PostgreSQL for product data
+  product-db:
+    image: postgres:16-alpine
+    container_name: product-db
+    environment:
+      POSTGRES_USER: product_user
+      POSTGRES_PASSWORD: product_pass
+      POSTGRES_DB: product_db
+    volumes:
+      - product_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # 4) Redis cache
+  cache:
+    image: redis:alpine
+    container_name: cache
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # 5) Prometheus monitoring
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9091:9090"   # host 9091 -> container 9090
+    volumes:
+      - ../Prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - app-network
+    restart: unless-stopped
+
+volumes:
+  user_data:
+  product_data:
+
+networks:
+  app-network:
+    driver: bridge
