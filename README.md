@@ -32,3 +32,43 @@ ITSA-5501-Project/
 - Follow conventional commits: `feat: ...`, `fix: ...`, `docs: ...`
 - Open a PR to `main`, pass checks, request review, then merge
 - Tag releases with `vX.Y.Z`
+
+
+
+
+
+
+## Milestone 2 – Docker & Multi-Container Setup
+
+
+- `frontend/`
+  - `index.html` – Static page describing a vacation destination.
+- `docker/`
+  - `docker-compose.yml` – Multi-container configuration for:
+    - `frontend` (nginx) serving static HTML
+    - `user-db` (MongoDB with `user_data` volume)
+    - `product-db` (PostgreSQL with `product_data` volume)
+    - `cache` (Redis)
+    - `prometheus` (Prometheus monitoring)
+- `prometheus.yml` – Prometheus configuration with a basic scrape job.
+
+### Docker Workflow
+
+ **Start all services** (from `docker` folder):
+docker compose up -d
+
+
+Check container status:
+docker ps
+
+Access services:
+Frontend: http://localhost:9090
+Prometheus: http://localhost:9091
+
+
+Scale frontend to 3 instances:
+docker compose up -d --scale frontend=3
+
+
+Stop and remove containers:
+docker compose down
