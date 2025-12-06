@@ -72,3 +72,41 @@ docker compose up -d --scale frontend=3
 
 Stop and remove containers:
 docker compose down
+
+
+
+## Milestone 3 – Kubernetes
+
+- Created PVC `shared-logs-pvc` (ReadWriteOnce, 500Mi).
+- Deployed `nginx-sidecar-deployment` with:
+  - 5 replicas (scaled from 2).
+  - Containers: `nginx-container` (nginx:1.21) and `sidecar-container` (busybox).
+  - Shared PVC volume mounted at `/usr/share/nginx/html` and `/data`.
+- Exposed via NodePort service `nginx-sidecar-service` on port 30080.
+- Verified data sharing between containers by writing and reading `log.txt` in the shared volume.
+- Cleaned up deployment, service and PVC after verification.
+
+
+## Milestone 3 – Infrastructure as Code (Terraform on Azure)
+
+- Used Azure CLI and Terraform CLI to provision infrastructure.
+- Defined variables for:
+  - `resource_group_name = pm3VMResourceGroup`
+  - `location = eastus`
+  - `vm_size = Standard_B1s`
+  - `admin_username = azureuser`
+- Implemented `main.tf` to create:
+  - Resource group `pm3VMResourceGroup`
+  - Virtual network `myVMVnet` and subnet `myVMSubnet`
+  - Public IP `myVMPublicIP` (Standard SKU, Static)
+  - Network interface `myVMNic`
+  - Linux VM `myLinuxVM` (Ubuntu Server 18.04 LTS)
+- Implemented `outputs.tf` to output:
+  - `resource_group_id`
+  - `vm_public_ip`
+  - `vm_id`
+- Terraform workflow followed:
+  - `terraform init`, `terraform fmt`, `terraform validate`
+  - `terraform plan`, `terraform apply`
+  - `terraform state list` / `terraform state show`
+  - `terraform destroy` for cleanup.

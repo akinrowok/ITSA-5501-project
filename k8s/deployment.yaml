@@ -1,14 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-itsa
+  name: nginx-sidecar-deployment
 spec:
-  replicas: 1
-  selector: { matchLabels: { app: hello-itsa } }
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-sidecar-app
   template:
-    metadata: { labels: { app: hello-itsa } }
+    metadata:
+      labels:
+        app: nginx-sidecar-app
     spec:
+      volumes:
+        - name: shared-logs-volume
+          persistentVolumeClaim:
+            claimName: shared-logs-pvc
       containers:
-      - name: app
-        image: alpine:3.20
-        command: ["sh","-c","echo Hello ITSA-5501 && sleep 3600"]
+        - name: nginx-container
+          image: nginx:1.21
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: shared-logs-volume
+              mountPath: /usr/share/nginx/html
+        - name: sidecar-container
+          image: busybox
+          command: ["/bin/sh", "-c"]
+          args:
+            - while true; do
+                echo "Hello from sidecar" >> /data/log.txt;
+                sleep 10;
+              done
+          volumeMounts:
+            - name: shared-logs-volume
+              mountPath: /data
